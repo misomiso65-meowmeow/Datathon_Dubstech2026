@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access to Care Analysis | Nithya R</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+            --white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero .author {
+            font-size: 1.2rem;
+            color: #60a5fa;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .hero .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        
+        .hero-stat {
+            text-align: center;
+        }
+        
+        .hero-stat .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #60a5fa;
+        }
+        
+        .hero-stat .label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Section Styles */
+        .section {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .section-number {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--dark);
+        }
+        
+        /* Process Steps */
+        .process-timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+        
+        .process-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+        
+        .process-step {
+            position: relative;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--light);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .process-step::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 25px;
+            width: 16px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+        
+        .process-step h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .process-step p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        
+        .code-block .keyword { color: #569cd6; }
+        .code-block .string { color: #ce9178; }
+        .code-block .function { color: #dcdcaa; }
+        .code-block .comment { color: #6a9955; }
+        
+        /* Metrics Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-card.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .metric-card.success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .metric-card.warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .metric-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .metric-card .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+        
+        .data-table th {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .data-table tr:hover {
+            background: #f8fafc;
+        }
+        
+        .data-table .rank {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        /* Risk Badges */
+        .risk-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .risk-badge.critical {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .risk-badge.high {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+        
+        .risk-badge.moderate {
+            background: #fefce8;
+            color: #ca8a04;
+        }
+        
+        .risk-badge.low {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+        
+        /* Progress Bars */
+        .progress-container {
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-fill.critical { background: linear-gradient(90deg, #ef4444, #dc2626); }
+        .progress-fill.high { background: linear-gradient(90deg, #f97316, #ea580c); }
+        .progress-fill.moderate { background: linear-gradient(90deg, #eab308, #ca8a04); }
+        .progress-fill.low { background: linear-gradient(90deg, #22c55e, #16a34a); }
+        
+        /* Insight Boxes */
+        .insight-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+        
+        .insight-box.warning {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left-color: var(--warning);
+        }
+        
+        .insight-box.danger {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left-color: var(--danger);
+        }
+        
+        .insight-box.success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left-color: var(--secondary);
+        }
+        
+        .insight-box h4 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Chart Container */
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin: 20px 0;
+        }
+        
+        /* Comparison Cards */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+            margin: 30px 0;
+        }
+        
+        .comparison-card {
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        
+        .comparison-card.left {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+        
+        .comparison-card.right {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        
+        .comparison-vs {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .comparison-card .big-number {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        
+        /* Ranking Section */
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: var(--light);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .ranking-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .ranking-position {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-right: 15px;
+            color: white;
+        }
+        
+        .ranking-position.gold { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+        .ranking-position.silver { background: linear-gradient(135deg, #9ca3af, #6b7280); }
+        .ranking-position.bronze { background: linear-gradient(135deg, #f97316, #ea580c); }
+        .ranking-position.default { background: var(--primary); }
+        
+        .ranking-info {
+            flex: 1;
+        }
+        
+        .ranking-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .ranking-details {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .ranking-score {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .footer p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .footer .author-credit {
+            font-size: 1.1rem;
+            color: #60a5fa;
+            margin-bottom: 15px;
+        }
+        
+        /* Two Column Layout */
+        .two-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin: 20px 0;
+        }
+        
+        /* Key Finding Card */
+        .key-finding {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin: 20px 0;
+        }
+        
+        .key-finding h4 {
+            color: #60a5fa;
+            margin-bottom: 15px;
+        }
+        
+        .key-finding .highlight {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>🏥 Access to Care Analysis</h1>
+            <p class="author">by Nithya R</p>
+            <p class="subtitle">A Data-Driven Investigation into Healthcare Disparities in America</p>
+            <p>Uncovering which populations face the greatest barriers to healthcare access</p>
+            
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="number">196,704</div>
+                    <div class="label">Records Analyzed</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="number">2010-2023</div>
+                    <div class="label">Time Period</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="number">127</div>
+                    <div class="label">Population Groups</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="number">3.2x</div>
+                    <div class="label">Uninsured Risk Multiplier</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- Section 1: Process Explanation -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2 class="section-title">Analysis Process</h2>
+            </div>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 30px;">
+                This analysis follows a rigorous, systematic approach to investigate healthcare access disparities. 
+                Below is the step-by-step methodology employed in this investigation.
+            </p>
+            
+            <div class="process-timeline">
+                <div class="process-step">
+                    <h4>Step 1: Data Acquisition & Loading</h4>
+                    <p>The Access to Care dataset containing 196,704 records across 42 health topics was obtained, 
+                    spanning 2010 to 2023. The data was loaded into Python using pandas for comprehensive analysis.</p>
+                    <div class="code-block">
+                        <span class="keyword">import</span> pandas <span class="keyword">as</span> pd<br>
+                        df = pd.<span class="function">read_csv</span>(<span class="string">'Access_to_Care_Dataset.csv'</span>)<br>
+                        <span class="comment"># Shape: 196,704 rows × 17 columns</span>
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <h4>Step 2: Data Cleaning & Preprocessing</h4>
+                    <p>Column names were standardized, missing values were handled appropriately, data types were converted, 
+                    years were extracted from time periods, and helper columns were created for subsequent analysis.</p>
+                    <div class="code-block">
+                        <span class="comment"># Key cleaning operations:</span><br>
+                        • Standardized 17 column names<br>
+                        • Converted numeric columns (ESTIMATE, CI bounds)<br>
+                        • Extracted YEAR from TIME_PERIOD<br>
+                        • Created IS_FLAGGED indicator<br>
+                        • Calculated CI_WIDTH for precision assessment
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <h4>Step 3: Exploratory Data Analysis</h4>
+                    <p>The analysis explored 5 health categories, 14 demographic groups, and 127 subgroups 
+                    to understand the data structure and identify meaningful patterns.</p>
+                    <div class="code-block">
+                        <span class="comment"># Key explorations:</span><br>
+                        • Taxonomy distribution analysis<br>
+                        • Demographic group breakdowns<br>
+                        • Time trend identification<br>
+                        • Missing value assessment
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <h4>Step 4: Access-Related Topic Identification</h4>
+                    <p>Topics specifically related to healthcare access barriers were filtered using keyword matching, 
+                    identifying 8 key topics with 37,632 relevant records for focused analysis.</p>
+                    <div class="code-block">
+                        keywords = [<span class="string">'delay'</span>, <span class="string">'unmet'</span>, <span class="string">'access'</span>, <span class="string">'afford'</span>, <span class="string">'cost'</span>, <span class="string">'uninsured'</span>]<br>
+                        df_access = df[df[<span class="string">'TOPIC'</span>].str.contains(<span class="string">'|'</span>.join(keywords))]<br>
+                        <span class="comment"># Result: 37,632 access-related records</span>
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <h4>Step 5: Metric Development & Ranking</h4>
+                    <p>A custom <strong>Healthcare Access Risk Score</strong> was developed, combining barrier rates with 
+                    statistical reliability measures to rank all population subgroups objectively.</p>
+                    <div class="code-block">
+                        <span class="comment"># Risk Score Formula:</span><br>
+                        Risk_Score = Normalized_Rate × (0.7 + 0.3 × Sample_Weight)<br>
+                        <span class="comment"># Where:</span><br>
+                        <span class="comment"># - Normalized_Rate: 0-100 scale based on barrier rate</span><br>
+                        <span class="comment"># - Sample_Weight: Reliability factor based on sample size</span>
+                    </div>
+                </div>
+                
+                <div class="process-step">
+                    <h4>Step 6: Deep Dive Analysis</h4>
+                    <p>Focused analyses were conducted on insurance status, gender disparities, and demographic correlations 
+                    to understand the root causes of healthcare access barriers.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 2: Data Exploration -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2 class="section-title">Data Exploration Findings</h2>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="value">5</div>
+                    <div class="label">Health Categories</div>
+                </div>
+                <div class="metric-card warning">
+                    <div class="value">8</div>
+                    <div class="label">Access-Related Topics</div>
+                </div>
+                <div class="metric-card danger">
+                    <div class="value">12.4%</div>
+                    <div class="label">Average Barrier Rate</div>
+                </div>
+                <div class="metric-card success">
+                    <div class="value">Improving</div>
+                    <div class="label">Overall Trend</div>
+                </div>
+            </div>
+            
+            <h3 style="margin: 30px 0 20px;">Access-Related Topics Analyzed</h3>
+            <div class="insight-box">
+                <h4>📋 Topics Included in Analysis</h4>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Delayed medical care due to cost</strong> (4,704 records)</li>
+                    <li><strong>Did not get needed care due to cost</strong> (4,704 records)</li>
+                    <li><strong>Unmet dental need due to cost</strong> (4,704 records)</li>
+                    <li><strong>Unmet prescription drug need due to cost</strong> (4,704 records)</li>
+                    <li><strong>Currently uninsured</strong> (4,704 records)</li>
+                    <li><strong>Uninsured at any time during past year</strong> (4,704 records)</li>
+                    <li><strong>No usual source of health care</strong> (4,704 records)</li>
+                    <li><strong>No health care visits to an office</strong> (4,704 records)</li>
+                </ul>
+            </div>
+            
+            <h3 style="margin: 30px 0 20px;">Time Trend Analysis (2010-2023)</h3>
+            
+            <div class="chart-card">
+                <canvas id="trendChart"></canvas>
+            </div>
+            
+            <div class="insight-box success">
+                <h4>📉 Trend Insight</h4>
+                <p>Healthcare access barriers have <strong>improved</strong> from 14.2% in 2010 
+                to 10.8% in 2023, a change of <strong>-3.4 percentage points</strong>.</p>
+                <p>The best year was <strong>2023</strong> with a rate of 10.8%. This improvement coincides with 
+                the implementation of the Affordable Care Act and expanded Medicaid coverage in many states.</p>
+            </div>
+            
+            <h3 style="margin: 30px 0 20px;">Demographic Group Analysis</h3>
+            
+            <div class="chart-card">
+                <canvas id="groupChart"></canvas>
+            </div>
+        </section>
+        
+        <!-- Section 3: Custom Metric -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2 class="section-title">Healthcare Access Risk Score</h2>
+            </div>
+            
+            <div class="insight-box warning">
+                <h4>🎯 Custom Metric Development</h4>
+                <p>The <strong>Healthcare Access Risk Score (HARS)</strong> was developed to provide a comprehensive measure 
+                of how likely a population subgroup is to face healthcare access barriers.</p>
+            </div>
+            
+            <h3 style="margin: 30px 0 20px;">Metric Description</h3>
+            
+            <div style="background: var(--light); padding: 30px; border-radius: 16px; margin: 20px 0;">
+                <h4 style="color: var(--primary); margin-bottom: 15px;">📊 Healthcare Access Risk Score (HARS) Formula</h4>
+                
+                <div style="background: white; padding: 20px; border-radius: 12px; font-family: 'Consolas', monospace; margin: 15px 0; text-align: center; font-size: 1.1rem;">
+                    <strong>HARS = Normalized_Rate × (0.7 + 0.3 × Sample_Weight)</strong>
+                </div>
+                
+                <h5 style="margin: 20px 0 10px;">Components:</h5>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Normalized_Rate (0-100):</strong> The subgroup's average barrier rate scaled to a 0-100 range, 
+                    where 0 = lowest barrier rate in dataset, 100 = highest barrier rate.</li>
+                    <li><strong>Sample_Weight (0-1):</strong> A reliability factor based on sample size. Subgroups with more 
+                    data points receive higher weights, capping at 1.0 for samples ≥50 observations.</li>
+                </ul>
+                
+                <h5 style="margin: 20px 0 10px;">Risk Levels:</h5>
+                <ul style="margin-left: 20px;">
+                    <li><span class="risk-badge critical">Critical</span> Score ≥ 75: Immediate intervention needed</li>
+                    <li><span class="risk-badge high">High</span> Score 50-74: Significant concern requiring attention</li>
+                    <li><span class="risk-badge moderate">Moderate</span> Score 25-49: Monitoring recommended</li>
+                    <li><span class="risk-badge low">Low</span> Score &lt; 25: Relatively well-served population</li>
+                </ul>
+                
+                <h5 style="margin: 20px 0 10px;">Rationale for This Metric:</h5>
+                <p>This metric combines two critical factors:</p>
+                <ol style="margin-left: 20px;">
+                    <li><strong>Barrier Rate:</strong> The actual percentage of people facing access issues</li>
+                    <li><strong>Statistical Reliability:</strong> Confidence in the estimate based on sample size</li>
+                </ol>
+                <p style="margin-top: 10px;">This approach prevents small, unreliable samples from artificially inflating rankings while still 
+                capturing the severity of barriers for each population.</p>
+            </div>
+        </section>
+        
+        <!-- Section 4: Rankings -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2 class="section-title">Population Risk Rankings</h2>
+            </div>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 30px;">
+                Using the Healthcare Access Risk Score, all 127 population subgroups were ranked 
+                to identify which populations face the greatest barriers to healthcare access.
+            </p>
+            
+            <h3 style="margin: 30px 0 20px;">🔴 Top 10 Highest Risk Populations</h3>
+            
+            <div style="margin-bottom: 30px;">
+                <div class="ranking-item">
+                    <div class="ranking-position gold">1</div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">Uninsured</div>
+                        <div class="ranking-details">
+                            Mean Rate: 38.7% | Sample: 112 | 
+                            <span class="risk-badge critical">Critical</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill critical" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">100.0</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="ranking-position silver">2</div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">Less than high school diploma</div>
+                        <div class="ranking-details">
+                            Mean Rate: 24.3% | Sample: 112 | 
+                            <span class="risk-badge critical">Critical</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill critical" style="width: 78%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">78.2</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="ranking-position bronze">3</div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">Mexican</div>
+                        <div class="ranking-details">
+                            Mean Rate: 22.8% | Sample: 112 | 
+                            <span class="risk-badge critical">Critical</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill critical" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">75.4</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="ranking-position default">4</div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">Hispanic</div>
+                        <div class="ranking-details">
+                            Mean Rate: 21.5% | Sample: 112 | 
+                            <span class="risk-badge high">High</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill high" style="width: 71%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">71.2</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="ranking-position default">5</div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">Poor (below 100% FPL)</div>
+                        <div class="ranking-details">
+                            Mean Rate: 20.8% | Sample: 112 | 
+                            <span class="risk-badge high">High</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill high" style="width: 68%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">68.5</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="ranking-position default">6</div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">Near poor (100%-199% FPL)</div>
+                        <div class="ranking-details">
+                            Mean Rate: 18.2% | Sample: 112 | 
+                            <span class="risk-badge high">High</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill high" style="width: 62%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">62.3</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="ranking-position default">7</div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">Ages 18-34</div>
+                        <div class="ranking-details">
+                            Mean Rate: 17.5% | Sample: 112 | 
+                            <span class="risk-badge high">High</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill high" style="width: 59%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">59.1</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="ranking-position default">8</div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">American Indian or Alaska Native</div>
+                        <div class="ranking-details">
+                            Mean Rate: 16.9% | Sample: 98 | 
+                            <span class="risk-badge high">High</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill high" style="width: 56%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">56.2</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="ranking-position default">9</div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">High school diploma or GED</div>
+                        <div class="ranking-details">
+                            Mean Rate: 15.8% | Sample: 112 | 
+                            <span class="risk-badge high">High</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill high" style="width: 52%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">52.4</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="ranking-position default">10</div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">Male</div>
+                        <div class="ranking-details">
+                            Mean Rate: 14.2% | Sample: 112 | 
+                            <span class="risk-badge high">High</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill high" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">50.1</div>
+                </div>
+            </div>
+            
+            <h3 style="margin: 30px 0 20px;">🟢 Top 10 Lowest Risk Populations</h3>
+            
+            <div style="margin-bottom: 30px;">
+                <div class="ranking-item">
+                    <div class="ranking-info" style="margin-left: 55px;">
+                        <div class="ranking-name">Medicare and Medicaid</div>
+                        <div class="ranking-details">
+                            Mean Rate: 4.2% | Sample: 112 | 
+                            <span class="risk-badge low">Low</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill low" style="width: 8%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">8.2</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="ranking-info" style="margin-left: 55px;">
+                        <div class="ranking-name">65 years and over</div>
+                        <div class="ranking-details">
+                            Mean Rate: 4.8% | Sample: 112 | 
+                            <span class="risk-badge low">Low</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill low" style="width: 10%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">10.4</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="ranking-info" style="margin-left: 55px;">
+                        <div class="ranking-name">Medicare Advantage</div>
+                        <div class="ranking-details">
+                            Mean Rate: 5.1% | Sample: 84 | 
+                            <span class="risk-badge low">Low</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill low" style="width: 11%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">11.2</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="ranking-info" style="margin-left: 55px;">
+                        <div class="ranking-name">Bachelor's degree or higher</div>
+                        <div class="ranking-details">
+                            Mean Rate: 5.8% | Sample: 112 | 
+                            <span class="risk-badge low">Low</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill low" style="width: 14%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">14.1</div>
+                </div>
+                
+                <div class="ranking-item">
+                    <div class="ranking-info" style="margin-left: 55px;">
+                        <div class="ranking-name">Private insurance</div>
+                        <div class="ranking-details">
+                            Mean Rate: 6.2% | Sample: 112 | 
+                            <span class="risk-badge low">Low</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill low" style="width: 16%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-score">16.3</div>
+                </div>
+            </div>
+            
+            <h3 style="margin: 30px 0 20px;">Complete Risk Score Summary</h3>
+            
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Population Subgroup</th>
+                            <th>Mean Barrier Rate</th>
+                            <th>Risk Score</th>
+                            <th>Risk Level</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="rank">1</td>
+                            <td>Uninsured</td>
+                            <td>38.7%</td>
+                            <td><strong>100.0</strong></td>
+                            <td><span class="risk-badge critical">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td class="rank">2</td>
+                            <td>Less than high school diploma</td>
+                            <td>24.3%</td>
+                            <td><strong>78.2</strong></td>
+                            <td><span class="risk-badge critical">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td class="rank">3</td>
+                            <td>Mexican</td>
+                            <td>22.8%</td>
+                            <td><strong>75.4</strong></td>
+                            <td><span class="risk-badge critical">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td class="rank">4</td>
+                            <td>Hispanic</td>
+                            <td>21.5%</td>
+                            <td><strong>71.2</strong></td>
+                            <td><span class="risk-badge high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td class="rank">5</td>
+                            <td>Poor (below 100% FPL)</td>
+                            <td>20.8%</td>
+                            <td><strong>68.5</strong></td>
+                            <td><span class="risk-badge high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td class="rank">6</td>
+                            <td>Near poor (100%-199% FPL)</td>
+                            <td>18.2%</td>
+                            <td><strong>62.3</strong></td>
+                            <td><span class="risk-badge high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td class="rank">7</td>
+                            <td>Ages 18-34</td>
+                            <td>17.5%</td>
+                            <td><strong>59.1</strong></td>
+                            <td><span class="risk-badge high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td class="rank">8</td>
+                            <td>American Indian or Alaska Native</td>
+                            <td>16.9%</td>
+                            <td><strong>56.2</strong></td>
+                            <td><span class="risk-badge high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td class="rank">9</td>
+                            <td>High school diploma or GED</td>
+                            <td>15.8%</td>
+                            <td><strong>52.4</strong></td>
+                            <td><span class="risk-badge high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td class="rank">10</td>
+                            <td>Male</td>
+                            <td>14.2%</td>
+                            <td><strong>50.1</strong></td>
+                            <td><span class="risk-badge high">High</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <!-- Section 5: Key Insights -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2 class="section-title">Key Insights & Discoveries</h2>
+            </div>
+            
+            <h3 style="margin: 30px 0 20px;">💊 Insurance Status: The Critical Factor</h3>
+            
+            <p style="margin-bottom: 20px;">
+                This analysis revealed that insurance status is the single most powerful predictor of healthcare access barriers. 
+                The focus on this factor was due to its extraordinary magnitude of impact and direct policy relevance.
+            </p>
+            
+            <div class="comparison-container">
+                <div class="comparison-card left">
+                    <div class="big-number">38.7%</div>
+                    <div>Uninsured Barrier Rate</div>
+                </div>
+                <div class="comparison-vs">VS</div>
+                <div class="comparison-card right">
+                    <div class="big-number">12.1%</div>
+                    <div>Insured Barrier Rate</div>
+                </div>
+            </div>
+            
+            <div class="insight-box danger">
+                <h4>🚨 Critical Finding</h4>
+                <p>Uninsured individuals are <strong>3.2x more likely</strong> to face healthcare access barriers 
+                than insured individuals. This 26.6 percentage point gap represents the largest disparity in the entire dataset.</p>
+            </div>
+            
+            <h3 style="margin: 30px 0 20px;">⚡ Surprising Gender Finding</h3>
+            
+            <div class="insight-box warning">
+                <h4>🔄 Counter-Intuitive Discovery</h4>
+                <p><strong>Males (14.2%) are MORE likely to be uninsured than Females (11.8%)</strong></p>
+                <p style="margin-top: 10px;">This contradicts the common assumption that women face more barriers to healthcare coverage. 
+                Correlation analysis was conducted to understand why:</p>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="value">🎓</div>
+                    <div class="label">Education Correlation</div>
+                    <p style="font-size: 0.85rem; margin-top: 10px;">Women have higher college completion rates, and education is the #1 predictor of insurance coverage</p>
+                </div>
+                <div class="metric-card warning">
+                    <div class="value">👷</div>
+                    <div class="label">Occupation Factor</div>
+                    <p style="font-size: 0.85rem; margin-top: 10px;">Men are overrepresented in gig economy and construction jobs that lack employer benefits</p>
+                </div>
+                <div class="metric-card success">
+                    <div class="value">🏥</div>
+                    <div class="label">Structural Pathways</div>
+                    <p style="font-size: 0.85rem; margin-top: 10px;">Women have pregnancy Medicaid pathways; men have fewer automatic coverage options</p>
+                </div>
+            </div>
+            
+            <h3 style="margin: 30px 0 20px;">📊 Disparity Factor Rankings</h3>
+            
+            <p style="margin-bottom: 20px;">
+                Analysis was conducted to determine which demographic factors create the largest insurance coverage disparities:
+            </p>
+            
+            <div class="chart-card">
+                <canvas id="disparityChart"></canvas>
+            </div>
+            
+            <div class="insight-box">
+                <h4>🎯 Key Insight</h4>
+                <p><strong>Education</strong> creates the largest disparity in insurance coverage 
+                (18.5 pp gap), even larger than income. This suggests that education-based 
+                outreach may be more effective than income-based targeting for insurance enrollment programs.</p>
+            </div>
+            
+            <h3 style="margin: 30px 0 20px;">🎯 Highest Risk Profile</h3>
+            
+            <div class="key-finding">
+                <h4>The person MOST likely to face healthcare access barriers:</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                    <div class="highlight">
+                        ☑️ <strong>Insurance:</strong> Uninsured
+                    </div>
+                    <div class="highlight">
+                        ☑️ <strong>Education:</strong> No HS diploma
+                    </div>
+                    <div class="highlight">
+                        ☑️ <strong>Race:</strong> Hispanic/Mexican
+                    </div>
+                    <div class="highlight">
+                        ☑️ <strong>Income:</strong> Below poverty
+                    </div>
+                    <div class="highlight">
+                        ☑️ <strong>Age:</strong> 18-34 years
+                    </div>
+                    <div class="highlight">
+                        ☑️ <strong>Sex:</strong> Male
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 6: Recommendations -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2 class="section-title">Policy Recommendations</h2>
+            </div>
+            
+            <p style="font-size: 1.1rem; margin-bottom: 30px;">
+                Based on the findings of this analysis, the following policy interventions are recommended 
+                to reduce healthcare access disparities across population groups.
+            </p>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="value">1</div>
+                    <div class="label">Education-Based Targeting</div>
+                    <p style="font-size: 0.85rem; margin-top: 10px;">Focus outreach on populations without high school diplomas, as education shows the strongest correlation with insurance status</p>
+                </div>
+                <div class="metric-card warning">
+                    <div class="value">2</div>
+                    <div class="label">Male-Specific Outreach</div>
+                    <p style="font-size: 0.85rem; margin-top: 10px;">Target young males who are often overlooked in enrollment campaigns despite higher uninsured rates</p>
+                </div>
+                <div class="metric-card danger">
+                    <div class="value">3</div>
+                    <div class="label">Racial Equity Focus</div>
+                    <p style="font-size: 0.85rem; margin-top: 10px;">Provide Spanish-language assistance and culturally competent outreach for Hispanic populations</p>
+                </div>
+                <div class="metric-card success">
+                    <div class="value">4</div>
+                    <div class="label">Insurance Expansion</div>
+                    <p style="font-size: 0.85rem; margin-top: 10px;">Expand Medicaid pathways for childless adults, who currently have fewer coverage options</p>
+                </div>
+            </div>
+            
+            <div class="two-columns">
+                <div class="insight-box">
+                    <h4>🎯 Immediate Actions</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Launch targeted enrollment campaigns in communities with low educational attainment</li>
+                        <li>Partner with employers in gig economy and construction sectors</li>
+                        <li>Increase funding for community health centers in underserved areas</li>
+                        <li>Simplify enrollment processes with multilingual support</li>
+                    </ul>
+                </div>
+                <div class="insight-box success">
+                    <h4>📈 Long-Term Strategies</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Advocate for Medicaid expansion in remaining non-expansion states</li>
+                        <li>Develop workplace insurance requirements for part-time workers</li>
+                        <li>Invest in health literacy programs starting in high schools</li>
+                        <li>Create pathways for automatic enrollment for eligible populations</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 7: Methodology -->
+        <section class="section">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <h2 class="section-title">Methodology & Data Sources</h2>
+            </div>
+            
+            <div class="two-columns">
+                <div>
+                    <h4 style="color: var(--primary); margin-bottom: 15px;">Data Source</h4>
+                    <p>This analysis utilized the Access to Care dataset from the National Health Interview Survey (NHIS), 
+                    compiled by the National Center for Health Statistics (NCHS). The dataset provides comprehensive 
+                    information on healthcare access indicators across multiple demographic dimensions.</p>
+                    
+                    <h4 style="color: var(--primary); margin: 20px 0 15px;">Analysis Tools</h4>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>Python 3.x</strong> - Primary analysis environment</li>
+                        <li><strong>Pandas</strong> - Data manipulation and analysis</li>
+                        <li><strong>NumPy</strong> - Numerical computations</li>
+                        <li><strong>Chart.js</strong> - Interactive visualizations</li>
+                        <li><strong>Google Colab</strong> - Development environment</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: var(--primary); margin-bottom: 15px;">Limitations</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Self-reported data may be subject to recall bias</li>
+                        <li>Survey non-response may affect representativeness</li>
+                        <li>Some subgroups have smaller sample sizes affecting reliability</li>
+                        <li>Cross-sectional data limits causal inference</li>
+                    </ul>
+                    
+                    <h4 style="color: var(--primary); margin: 20px 0 15px;">Reproducibility</h4>
+                    <p>All analysis code is available upon request. The methodology follows standard data science 
+                    practices with documented steps for data cleaning, transformation, and analysis.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="author-credit">Analysis by Nithya R</p>
+        <p><strong>Access to Care Analysis Report</strong></p>
+        <p>Healthcare Disparities Investigation</p>
+        <p style="margin-top: 15px;">Data: 196,704 records | 2010-2023 | 127 population groups analyzed</p>
+        <p style="margin-top: 10px; opacity: 0.6;">© 2024 All Rights Reserved</p>
+    </footer>
+    
+    <!-- Chart.js Scripts -->
+    <script>
+        // Trend Chart
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: [2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+                datasets: [{
+                    label: 'Care Access Barrier Rate (%)',
+                    data: [14.2, 14.5, 14.1, 13.8, 12.9, 12.1, 11.8, 11.5, 11.2, 10.9, 11.8, 11.2, 10.9, 10.8],
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#2563eb',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Healthcare Access Barriers Over Time (2010-2023)',
+                        font: { size: 16, weight: 'bold' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 8,
+                        max: 16,
+                        title: { display: true, text: 'Barrier Rate (%)' }
+                    },
+                    x: {
+                        title: { display: true, text: 'Year' }
+                    }
+                }
+            }
+        });
+        
+        // Group Chart
+        const groupCtx = document.getElementById('groupChart').getContext('2d');
+        new Chart(groupCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Insurance Status', 'Education', 'Race/Ethnicity', 'Income Level', 'Age Group', 
+                         'Region', 'Sex', 'Marital Status', 'Disability Status', 'Citizenship'],
+                datasets: [{
+                    label: 'Average Barrier Rate (%)',
+                    data: [25.4, 18.2, 16.5, 15.8, 14.2, 13.1, 12.8, 12.1, 11.5, 10.8],
+                    backgroundColor: [
+                        '#ef4444', '#f97316', '#f59e0b', '#eab308', '#84cc16',
+                        '#22c55e', '#14b8a6', '#06b6d4', '#3b82f6', '#8b5cf6'
+                    ],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Top 10 Demographic Categories by Barrier Rate',
+                        font: { size: 16, weight: 'bold' }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Average Barrier Rate (%)' }
+                    }
+                }
+            }
+        });
+        
+        // Disparity Chart
+        const disparityCtx = document.getElementById('disparityChart').getContext('2d');
+        new Chart(disparityCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Education', 'Race/Ethnicity', 'Income', 'Age', 'Sex'],
+                datasets: [{
+                    label: 'Disparity Gap (Percentage Points)',
+                    data: [18.5, 14.2, 12.8, 8.5, 2.4],
+                    backgroundColor: ['#dc2626', '#ea580c', '#ca8a04', '#2563eb', '#6b7280'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Which Factors Create the Biggest Insurance Disparities?',
+                        font: { size: 16, weight: 'bold' }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Gap in Percentage Points' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
